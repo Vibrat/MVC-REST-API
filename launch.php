@@ -6,6 +6,7 @@ use System\Model\Model;
 use System\Model\RestView;
 use Authenticator\Authenticator;
 use Token\Token;
+use Vendor\Apier\Apier;
 
 session_start([
     'cookie_lifetime' => 86400,
@@ -46,6 +47,13 @@ $engine->set(
     'user', 
     new Authenticator($engine->db, new Token()));
 
+## init api hanlder
+$engine->set('apier',new Apier());
+$engine->apier->setHeaders([
+    'APIKEY: ' . SERVICE_API_KEY,
+    'Content-Type: application/json',
+]);
+
 ## Load and inject dependencies  
 $engine->router->load(
     $engine->router->getLoadFiles(), 
@@ -54,5 +62,6 @@ $engine->router->load(
         'json'      => $engine->json,
         'model'     => $engine->model,
         'view'      => $engine->view,
-        'user'      => $engine->user
+        'user'      => $engine->user,
+        'apier'     => $engine->apier
     ]);

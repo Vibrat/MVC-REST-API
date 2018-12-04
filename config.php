@@ -24,3 +24,7 @@ define("DB_PREFIX", "");
 define ("BASE_CONTROLLER", 'api/controller/');
 define ("BASE_VIEW", "api/view/" );
 define ("BASE_MODEL", "api/model/");
+
+
+## API MICROSERVICE
+define("SERVICE_API_KEY", "ABSD9810324000");

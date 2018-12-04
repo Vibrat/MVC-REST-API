@@ -22,30 +22,34 @@ class Router {
         $func = new BeFunc();
 
         ## init engine and params
-        $this->params = $params;
+        ## $this->params = $params;
         
         ## save and rebuild engine url
         # Example convert /new-account to newAccount()
-        $actions = explode("-", $params[count($params) - 1]);
+        // $actions = explode("-", $params[count($params) - 1]);
         
-        foreach($actions as $key => $item) {
-            if (!$key) {
-                $action = $item;
-                continue;
-            } 
+        // foreach($actions as $key => $item) {
+        //     if (!$key) {
+        //         $action = $item;
+        //         continue;
+        //     } 
 
-            $action .= ucwords($item);
+        //     $action .= ucwords($item);
+        // }
+
+        foreach ($params as $param) {
+            $this->params[] = $this->reBuildUrl($param);
         }
 
         $this->engine = [
-            'class'   => $params[count($params) - 2 ],
-            'action'  => $action
+            'class'   => (count($this->engine) !== 1 ? $this->params[count($this->params) - 2 ] : $this->params[0]),
+            'action'  => (count($this->engine) !== 1 ? $this->params[count($this->params) - 1]  : null)
         ];
             
         ## load and save files   
         if (count($params) > 1) {
             $branchFile =  $this->baseDir . $baseController . implode("/", array_slice($this->params, 0, count($this->params) - 1)) . "Controller.php";
-            
+        
             if (file_exists($branchFile)) {
                 $this->loadFiles[] = $branchFile;
             }
@@ -85,5 +89,21 @@ class Router {
                 $initClass->error();  
             }       
         }
+    }
+
+    private function reBuildUrl(String $url) {
+        $actions = explode("-", $url);
+        $action  = '';
+
+        foreach($actions as $key => $item) {
+            if (!$key) {
+                $action = $item;
+                continue;
+            } 
+
+            $action .= ucwords($item);
+        }
+
+        return $action;
     }
  }

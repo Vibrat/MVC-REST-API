@@ -1,6 +1,8 @@
 <?php 
 /**
  * Regster Token Manager
+ * 
+ * Use to register and retrive token
  */
 
 use \System\Model\Controller;
@@ -15,9 +17,11 @@ class RegisterController extends Controller {
      */
     public function newAccount() {
         $this->model->load('account/account');
-        
+
+        $this->json->sendBack($_POST);
         if ($this->validateUser($_POST)) {
             ## validation of users here
+           
             $response = $this->model->account->createAccount($_POST);
 
             $this->json->sendBack($response);

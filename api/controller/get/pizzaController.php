@@ -30,14 +30,18 @@ class PizzaController extends Controller {
      */
     public function barg() {
 
-       $this->model->load('pizza/pizza.php'); 
-    
-       $query = $this->db->query("SELECT COUNT(*) as total FROM `" . DB_PREFIX . "pizza`");
+       $this->model->load('pizza/pizza'); 
 
-       $this->json->sendBack($query->rows());
+       $res = $this->apier->call(
+           'POST', 'http://localhost:81/index.php?api=post/account/register/new-account', [
+           'username' => 'lamnguyen22323', 'password' => '1234382173468326123123'
+       ]);
+
+       $this->json->sendBack($res);
     }
 
     public function login() {
+       
         $token = $this->user->login([
             'username' => $_POST['username'], 
             'password' => $_POST['password']
@@ -45,10 +49,11 @@ class PizzaController extends Controller {
 
         $this->json->sendBack([
             'token' => $token 
-            ]);
+            ]);   
     }
 
     public function checkLogin() {
+        var_dump("hello world");
         $this->json->sendBack($this->user->getToken());
     }
 
