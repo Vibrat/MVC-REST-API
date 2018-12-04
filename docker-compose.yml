@@ -1,0 +1,20 @@
+version: '3.4'
+
+services: 
+  
+  api: 
+    image: rest-api
+    volumes: 
+      - ./:/var/www/html
+    ports: 
+      - 81:80
+    external_links:
+      - 'db'  
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456789
+    networks: 
+      - theWorld  
+
+networks:
+  theWorld:
+    external: true 
