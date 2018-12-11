@@ -21,29 +21,13 @@ class Router {
         $params = preg_split("/[\/]+/", $caller);
         $func = new BeFunc();
 
-        ## init engine and params
-        ## $this->params = $params;
-        
-        ## save and rebuild engine url
-        # Example convert /new-account to newAccount()
-        // $actions = explode("-", $params[count($params) - 1]);
-        
-        // foreach($actions as $key => $item) {
-        //     if (!$key) {
-        //         $action = $item;
-        //         continue;
-        //     } 
-
-        //     $action .= ucwords($item);
-        // }
-
         foreach ($params as $param) {
             $this->params[] = $this->reBuildUrl($param);
         }
 
         $this->engine = [
-            'class'   => (count($this->engine) !== 1 ? $this->params[count($this->params) - 2 ] : $this->params[0]),
-            'action'  => (count($this->engine) !== 1 ? $this->params[count($this->params) - 1]  : null)
+            'class'   => (count($this->engine) > 1 ? $this->params[count($this->params) - 2 ] : $this->params[0]),
+            'action'  => (count($this->engine) > 1 ? $this->params[count($this->params) - 1]  : null)
         ];
             
         ## load and save files   

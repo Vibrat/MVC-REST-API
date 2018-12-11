@@ -41,6 +41,9 @@
   ## Launch aplication
   $app = new Application();
   $app->bootstrap('./launch.php');
+  
+  ## Save app for implementation
+  $GLOBALS['app'] = $app;
 
 
 

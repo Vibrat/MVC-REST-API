@@ -29,9 +29,16 @@ class Engine {
      * @function __get magic function
      * @param string $name name of object set at the startup
      */
-
     public function __get($name) {
         return $this->childs[$name];
     }
      
+    /**
+     * Return dependencies
+     * 
+     * @return Array
+     */
+    public function getDependencies() {
+        return $this->childs;
+    }
  }

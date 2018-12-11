@@ -6,7 +6,7 @@ namespace System\Model;
  * Use as extention
  */
 abstract class Controller {
-
+    
     /**
      * Dependencies
      */
