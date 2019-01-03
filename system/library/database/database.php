@@ -57,8 +57,7 @@ class MySqliDatabase {
         $conn = $this->connect($sql); 
 
         ## Add response to hanlder
-        if ($conn) {
-            $query = $conn->query($sql);
+        if ($conn && $query = $conn->query($sql)) {
             $this->response->initDataConnection($query);
         }
 

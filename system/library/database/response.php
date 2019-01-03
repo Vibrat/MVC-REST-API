@@ -31,10 +31,15 @@ namespace Database;
      * @return (Array || Value)
      */
     public function row($index = false) {
+
+        if(!$this->query) {
+            return;
+        }
+            
         /** @var PDOStatement $row */
         $row = $this->query->fetch();
 
-        /** Return value if indexn exists */
+        /** Return value if index exists */
         if ($index) {
             return $row[$index];
         }
@@ -48,13 +53,13 @@ namespace Database;
      */
     public function rows() {
         /** return row of values */
-        return $this->query->fetchAll();
+        return ($this->query ? $this->query->fetchAll() : false);
     }
 
     /**
      * Return number of records
      */
     public function rowsCount() {
-        return $this->query->rowCount();
+        return ($this->query ? $this->query->rowCount() : false);
     }
  }
