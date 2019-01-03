@@ -26,8 +26,8 @@ class Router {
         }
 
         $this->engine = [
-            'class'   => (count($this->engine) > 1 ? $this->params[count($this->params) - 2 ] : $this->params[0]),
-            'action'  => (count($this->engine) > 1 ? $this->params[count($this->params) - 1]  : null)
+            'class'   => (count($this->params) > 1 ? $this->params[count($this->params) - 2 ] : $this->params[0]),
+            'action'  => (count($this->params) > 1 ? $this->params[count($this->params) - 1]  : null)
         ];
             
         ## load and save files   
@@ -49,6 +49,7 @@ class Router {
     }
 
     public function load($loadFiles, $dependencies = []) {
+
         foreach($loadFiles as $file) {
             ## Require file
             require_once (file_exists($file) ? $file : null);
