@@ -18,6 +18,16 @@ abstract class Controller {
     function __construct($dependencies) {
         $this->actions = array_merge($this->actions, $dependencies);
     }
+
+    /**
+     * Index function
+     * 
+     * is called if not method is specified in Url
+     */
+
+    public function index() {
+        # Perform index here
+    }
     
     /**
      * Set dependencies
