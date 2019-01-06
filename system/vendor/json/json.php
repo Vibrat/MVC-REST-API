@@ -7,11 +7,12 @@ namespace JsonStore;
  */
 
  class JsonStore {
-
+    private $env;
     /**
      * Default init to return JSON
      */
-    function __construct() {
+    function __construct(int $env = APPLICATION) {
+        $this->env = $env;
         header('Content-type:application/json;charset=utf-8');
     }
 
@@ -30,7 +31,9 @@ namespace JsonStore;
      * @param Array $array
      */
     public function sendBack($data) {
-        echo json_encode($data);
+        if ($this->env) {
+            echo json_encode($data);
+        } 
     }
 
     /**

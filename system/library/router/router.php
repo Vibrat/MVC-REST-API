@@ -1,5 +1,6 @@
 <?php 
 use beFunc\beFunc as Befunc;
+use phpDocumentor\Reflection\Types\Integer;
 
 class Router {
     private $baseDir;
@@ -7,18 +8,30 @@ class Router {
     private $params = [];
     private $loadFiles = [];
     private $engine = [];
+    private $env;
     
     function __construct(
         String $baseController,
         String $caller, 
-        String $baseDir) 
+        String $baseDir,
+        int    $env = APPLICATION) 
         {
         
+        ## Switching env for app and test
+        $this->env = $env;
+
         ## set baseDir for implement code
         $this->baseDir = $baseDir;
 
-        ## parse params
-        $params = preg_split("/[\/]+/", $caller);
+        ## build params & unset empty last element
+        $params = preg_split("/[\/\\\]+/", $caller);  
+        
+        if (count ($params) > 1 
+            && empty($params[count($params) - 1])) {
+            
+            unset($params[count($params) - 1]);
+        };   
+
         $func = new BeFunc();
 
         foreach ($params as $param) {
@@ -51,11 +64,12 @@ class Router {
     public function load($loadFiles, $dependencies = []) {
 
         foreach($loadFiles as $file) {
+         
             ## Require file
             require_once (file_exists($file) ? $file : null);
 
             ## a text string to get value
-            $list = preg_split("/[\/\\\]/", $file);
+            $list     = preg_split("/[\/\\\]/", $file);
             $filename = explode(".", $list[count($list) - 1])[0];
 
             ## Init class an pass dependencies
@@ -64,15 +78,24 @@ class Router {
             
             if (isset($this->engine['action']) 
                 && method_exists($initClass, $this->engine['action'])) {
+                
                 ## call function based on url   
                 call_user_func_array([$initClass, $this->engine['action']], []);
             } elseif (method_exists($initClass, 'index')) {
+                
                 ## if action param not exists then call index
                 $initClass->index();
-            } else {
+            } elseif (method_exists($initClass, 'error')) {
                 ## call errors
                 $initClass->error();  
-            }       
+            }
+        }
+
+        ## Event Handler when url cannot get method
+        if (empty($loadFiles) && !$this->env) {        
+            
+            $initClass = new DefaultRouter($dependencies);  
+            $initClass->index();
         }
     }
 

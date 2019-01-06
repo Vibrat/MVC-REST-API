@@ -10,8 +10,8 @@
   use Engine\App\App as Application;
 
   ## load config
-  if (file_exists('./config.php')) {
-      require_once './config.php';
+  if (file_exists(dirname(__FILE__, 2) . '/config.php')) {
+      require_once dirname(__FILE__, 2) . '/config.php';
   }
 
   ## create engine
@@ -41,7 +41,7 @@
 
   ## Launch aplication
   $app = new Application();
-  $app->bootstrap('./launch.php');
+  $app->bootstrap(dirname(__FILE__) . './launch.php');
   
   ## Save app for implementation
   $GLOBALS['app'] = $app;

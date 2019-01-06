@@ -25,6 +25,7 @@ class PizzaController extends Controller {
         $this->json->sendBack([
             'hello' => 'hi'
         ]);
+        return 3;
     }
 
     /**

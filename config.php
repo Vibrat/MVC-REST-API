@@ -29,3 +29,7 @@ define ("BASE_MODEL",       "api/model/");
 
 ## API MICROSERVICE
 define("SERVICE_API_KEY", "ABSD9810324000");
+
+## KEY ENV
+define('APPLICATION', 1);
+define('APPLICATION_TEST', 0);

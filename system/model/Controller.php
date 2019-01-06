@@ -20,16 +20,6 @@ abstract class Controller {
     }
 
     /**
-     * Index function
-     * 
-     * is called if not method is specified in Url
-     */
-
-    public function index() {
-        # Perform index here
-    }
-    
-    /**
      * Set dependencies
      * 
      * @param String $name Name of dependency
@@ -44,10 +34,13 @@ abstract class Controller {
     }
 
     /**
-     * Perform error when no action is called (when function index() not exists)
+     * Is called if index function does not exist
      */
     public function error() {
-        ## in the future we do something here
-    }
-    
+        
+        $this->json->sendBack([
+            'error'     => 'Method',
+            'message'   => 'Class found while method does not exist'
+        ]);
+    }   
 }

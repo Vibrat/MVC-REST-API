@@ -5,10 +5,10 @@
     "autoload": {},
     "autoload-dev": {
         "classmap": ["api/"],
-        "files": ["index.php"],
+        "files": ["tests/index.php"],
         "psr-4": {
             "System\\Model\\": "system/",
-            "TestEngine\\": ""
+            "TestEngine\\": "tests/"
         }
     },
     "require": {},
