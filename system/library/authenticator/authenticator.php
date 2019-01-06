@@ -20,11 +20,11 @@ class Authenticator {
      */
     public  $tokener;
     
-    /** @var \MySqliDatabase $db */
+    /** @var \MysqliDatabase $db */
     private $db;
 
     function __construct(
-        \MySqliDatabase $db, 
+        \MysqliDatabase $db, 
         \Token\Token $tokener) 
         {
 
@@ -44,15 +44,50 @@ class Authenticator {
      * @param  String $token
      * @return Bool
      */
-    public function isLogged($token) {
-        return $this->isLogged || $this->tokener->checkToken($token);
+    public function isLogged() {
+        return $this->isLogged;
     }
 
     /**
-     * get Token
+     * Check whether token is valid under specified permissions
+     * 
+     * @param String $token 
+     * @param String $permission_url post/account/new
+     * @return Boolean 
      */
-    public function getToken() {
-        return $this->tokener->getToken();
+    public function istokenValid($token, $permission_url = false) {
+
+        $permission_url = ($permission_url ? $permission_url : $_GET['api']);
+
+        # check group permission
+        $query_token =  $this->db->query(sprintf(
+            AUTHENTICATOR_GET_USER_ID_BY_TOKEN,
+            DB_PREFIX,
+            $token
+        ));
+
+        $query_permission = $this->db->query(sprintf(
+            AUTHENTICATOR_CHECK_PERMISSION,
+            DB_PREFIX,
+            DB_PREFIX,
+            $query_token->row('id')
+        ));
+
+        $permissions = json_decode($query_permission->row('permission'))->api;
+
+        if (in_array($permission_url, $permissions)) {
+           
+            $query = $this->db->query(sprintf(
+                AUTHENTICATOR_CHECK_TOKEN,
+                DB_PREFIX, 
+                $token)); 
+
+            if ($query->row('total')) {
+                return true;
+            }   
+        }
+           
+        return;
     }
 
     /**
@@ -61,17 +96,37 @@ class Authenticator {
      * @param Array $credentials ['username'=> 'lam-nguyen', 'password' => '12312731562' ]
      */
     public function login(Array $credentials) {
-        
-        ## call database's credentials
-        $sql = "SELECT COUNT(*) as total FROM `" . DB_PREFIX . "users` WHERE username = '" . $credentials['username'] . "' AND password = '" . $credentials['password'] . "'";
 
-        /** @var Reponse Connection */
-        $query = $this->db->query($sql);
-
-        if (!empty($query->row('total'))) {
-            return $this->tokener->createToken();
-        }   
-
+        /** @var Response Connection */
+        $row = $this->db->query(sprintf(
+            AUTHENTICATOR_COUNT_USERS, 
+            DB_PREFIX, 
+            $credentials['username']))->row();
+    
+        if (password_verify($credentials['password'], $row['password'])) {
+            
+            $token = $this->tokener->createToken();
+            $numTokens = $this->db->query(sprintf(
+                AUTHENTICATOR_COUNT_TOKENS, 
+                DB_PREFIX, 
+                $row['id']))->row('total');
+                
+            if ($numTokens) {
+                
+                $this->db->query(sprintf(
+                    AUTHENTICATOR_UPDATE_TOKENS, 
+                    DB_PREFIX, 
+                    $token, $row['id']));
+                return $token;
+            } 
+                
+            $this->db->query(sprintf(
+                AUTHENTICATOR_INSERT_TOKENS, 
+                DB_PREFIX, 
+                $token, $row['id']));
+            return $token;       
+        }
+    
         return false;
     }
 }

@@ -5,6 +5,8 @@
  * to load a module please include into this file
  */
 
+
+require_once "library.config.php"; 
 require_once "router/router.php";
 require_once "database/database.php";
 require_once "authenticator/authenticator.php";

@@ -14,39 +14,6 @@ class Token {
     }
 
     /**
-     * return a token
-     */
-    public function getToken() {
-        ## check current flow
-        if (isset($token)) {
-            return $this->token;
-        }
-
-        ## check SESSION
-        if ($_SESSION['token'] && time() <= $_SESSION['token_expire']) {
-            return $this->token = $_SESSION['token'];
-        }
-
-        return false;
-    }
-    
-    /**
-     * check if Token is still alive
-     * 
-     * @var String $token
-     */
-    public function checkToken(String $token) {
-
-        ## if token is provided
-        if (isset($token)) {
-            ## Check token here, please rememnber to save in SESSION
-            return $token == $_SESSION['token'];
-        }
-
-        return false;
-    }
-
-    /**
      * init new Token
      * 
      * @return number $number

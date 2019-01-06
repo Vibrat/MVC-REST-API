@@ -27,7 +27,7 @@ class AccountModel extends BaseModel {
      */
     public function createAccount($data) {
        
-        $sql = "INSERT INTO `" . DB_PREFIX ."users` SET username = '" . $data['username'] . "', password = '" . $data['password'] . "'";
+        $sql = "INSERT INTO `" . DB_PREFIX ."users` SET username = '" . $data['username'] . "', password = '" . password_hash($data['password'], PASSWORD_BCRYPT) . "'";
         $query = $this->db->query($sql);
 
         ## return query of affected rows

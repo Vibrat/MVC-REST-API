@@ -8,3 +8,8 @@ How to config this application
 
 # Implement Testing
 All test-cases will be stored in `tests/`. This uses `PHPUnit`, in order to run test just run this command: `./vendor/bin/phpunit tests/`
+
+# Todo:
+
+    + Add Permissions.
+    + Developing Website API.

@@ -21,6 +21,12 @@ use System\Model\Controller;
  */
 class PizzaController extends Controller {
 
+    public function testFunc(){
+        $this->json->sendBack([
+            'hello' => 'hi'
+        ]);
+    }
+
     /**
      * Pizza API: Get Pizza information
      * 
@@ -52,16 +58,10 @@ class PizzaController extends Controller {
     }
 
     public function checkLogin() {
-        var_dump("hello world");
         $this->json->sendBack($this->user->getToken());
     }
 
     public function isLogged() {
         $this->json->sendBack($this->user->isLogged($_GET['token']));
-    }
-
-    public function testFunc() {
-        $this->model->load('pizza/pizza'); 
-        return 3;
     }
 }

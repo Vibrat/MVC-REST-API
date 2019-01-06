@@ -38,6 +38,7 @@
         require_once $vendor;
   }
 
+
   ## Launch aplication
   $app = new Application();
   $app->bootstrap('./launch.php');

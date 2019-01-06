@@ -12,7 +12,7 @@ namespace Database;
      * Database Connection
      * @var PDOStatement
      */
-    private $query;
+    public $query;
 
 
     /**
