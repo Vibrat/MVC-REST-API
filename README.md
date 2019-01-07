@@ -13,4 +13,4 @@ All test-cases will be stored in `tests/`. This uses `PHPUnit`, in order to run 
 
     + Add Permissions.
     + Developing Website API.
-    + Fixed: Error while missing `/` and '\` in url
+    + Getting value from PUT AND DELETE METHOD

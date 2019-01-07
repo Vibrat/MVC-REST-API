@@ -55,7 +55,7 @@ class Authenticator {
      * @param String $permission_url post/account/new
      * @return Boolean 
      */
-    public function istokenValid($token, $permission_url = false) {
+    public function isTokenValid($token, $permission_url = false) {
 
         $permission_url = ($permission_url ? $permission_url : $_GET['api']);
 
@@ -75,7 +75,7 @@ class Authenticator {
 
         $permissions = json_decode($query_permission->row('permission'))->api;
 
-        if (in_array($permission_url, $permissions)) {
+        if (in_array($permission_url, ($permissions ? $permissions : []))) {
            
             $query = $this->db->query(sprintf(
                 AUTHENTICATOR_CHECK_TOKEN,

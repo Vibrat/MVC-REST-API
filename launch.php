@@ -7,6 +7,8 @@ use System\Model\RestView;
 use Authenticator\Authenticator;
 use Token\Token;
 use Vendor\Apier\Apier;
+use beFunc\beFunc as Befunc;
+use Http\DataSubmit;
 
 session_start([
     'cookie_lifetime' => 86400,
@@ -20,7 +22,7 @@ $engine = $this->get('engine');
 $engine->set('router', 
     new Router(
         BASE_CONTROLLER, 
-        (isset($_GET['api']) ? $_GET['api'] : ''), 
+        (isset($_GET['api']) ? $_GET['api'] = BeFunc::reBuildUrlSlash($_GET['api']) : ''), 
         DIR_PATH));
 
 ## init Json Package
@@ -54,6 +56,8 @@ $engine->apier->setHeaders([
     'Content-Type: application/json',
 ]);
 
+$engine->set('http', new DataSubmit());
+
 ## Load and inject dependencies  
 $engine->router->load(
     $engine->router->getLoadFiles(), 
@@ -63,5 +67,6 @@ $engine->router->load(
         'model'     => $engine->model,
         'view'      => $engine->view,
         'user'      => $engine->user,
-        'apier'     => $engine->apier
+        'apier'     => $engine->apier,
+        'http'      => $engine->http
     ]);

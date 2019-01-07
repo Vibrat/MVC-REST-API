@@ -25,12 +25,6 @@ class Router {
 
         ## build params & unset empty last element
         $params = preg_split("/[\/\\\]+/", $caller);  
-        
-        if (count ($params) > 1 
-            && empty($params[count($params) - 1])) {
-            
-            unset($params[count($params) - 1]);
-        };   
 
         $func = new BeFunc();
 

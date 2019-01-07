@@ -12,3 +12,4 @@ require_once "router/router.php";
 require_once "database/database.php";
 require_once "authenticator/authenticator.php";
 require_once "authenticator/token.php";
+require_once "http/http.php";

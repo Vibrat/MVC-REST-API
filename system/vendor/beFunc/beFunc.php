@@ -25,5 +25,21 @@ class beFunc {
         ## return data
         return $data;
     }   
+
+    public function reBuildUrlSlash(String $url) {
+        $data = '';
+        $split_texts = preg_split("/[A-Z]/", $url);
+        preg_match_all("/[A-Z]/", $url, $matches);
+
+        foreach($split_texts as $key => $text) {
+            if ($key) {
+                $data .= '-' . lcfirst($matches[0][$key - 1]) . $text;
+            } else {
+                $data .= $text;
+            }
+        }
+
+        return $data;
+    }
     
 }
