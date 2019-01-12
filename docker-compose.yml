@@ -3,8 +3,9 @@ version: '3.4'
 services: 
   
   api: 
-    image: rest-api
+    image: rest-api:latest
     restart: always
+    command: apachectl -D FOREGROUND   
     volumes: 
       - ./:/var/www/html
     ports: 

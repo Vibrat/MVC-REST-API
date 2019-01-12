@@ -11,6 +11,8 @@ class DataSubmit {
                 $this->data['POST'] = $_POST;
                 $this->data['GET']  = $_GET;
                 break;
+            case 'PUT':
+                $this->data['GET']  = $_GET;
             case 'GET':
                 $this->data['GET'] = $_GET;   
                 break; 

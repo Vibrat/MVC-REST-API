@@ -17,4 +17,15 @@ class GroupModel extends BaseModel {
         $sql = "SELECT COUNT(*) as total FROM `" . DB_PREFIX . "users_group` WHERE name = '" . $group_name . "'";
         return $this->db->query($sql)->row('total');
     }
+
+    /**
+     * List Permissions of a Group
+     * 
+     * @param Int id 
+     */
+    public function listPermissions($id) {
+        $query = $this->db->query("SELECT permission FROM `" . DB_PREFIX . "users_group` WHERE id  = '" . (int) $id ."'");
+
+        return $query->row('permission');
+    }
 }

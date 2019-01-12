@@ -13,10 +13,5 @@ RUN apt-get update \
     && apt-get install libmcrypt-dev -y libreadline-dev
 RUN apt-get update  \
     && docker-php-ext-install mcrypt
-
-## install pecl    
-RUN apt-get update && docker-php-ext-install -y pecl
-
+    
 COPY ./ /var/www/html/
-
-CMD apachectl -D FOREGROUND   

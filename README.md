@@ -11,6 +11,5 @@ All test-cases will be stored in `tests/`. This uses `PHPUnit`, in order to run 
 
 # Todo:
 
-    + Add Permissions.
+    + Revise Group Permission API
     + Developing Website API.
-    + Getting value from PUT AND DELETE METHOD
