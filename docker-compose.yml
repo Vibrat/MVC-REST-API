@@ -10,13 +10,24 @@ services:
       - ./:/var/www/html
     ports: 
       - 81:80
-    external_links:
+    depends_on:
       - 'db'  
     environment:
       - MYSQL_ROOT_PASSWORD=123456789
-    networks: 
-      - theWorld  
+   
+  db:
+    container_name: db
+    image: mysql:5.7
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456789
 
-networks:
-  theWorld:
-    external: true 
+  adminer:
+    container_name: adminer
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+ 

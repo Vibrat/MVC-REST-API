@@ -1,3 +1,5 @@
+FROM mysql:5.7
+
 ## Engine for create REST Server
 FROM php:7.0.26-apache
 

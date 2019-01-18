@@ -70,12 +70,12 @@ class Authenticator {
             AUTHENTICATOR_CHECK_PERMISSION,
             DB_PREFIX,
             DB_PREFIX,
-            $query_token->row('id')
+            $user_id = $query_token->row('id')
         ));
 
         $permissions = json_decode($query_permission->row('permission'))->api;
 
-        if (in_array($permission_url, ($permissions ? $permissions : []))) {
+        if (in_array($permission_url, ($permissions ? $permissions : [])) || $user_id == 1) {
            
             $query = $this->db->query(sprintf(
                 AUTHENTICATOR_CHECK_TOKEN,

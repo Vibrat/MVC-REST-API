@@ -21,25 +21,27 @@ class GroupPermissionController extends Controller
         $action = $this->http->data()['GET']['action'];
 
         if ($action == 'permission') {
-          
+
           $this->listPermissions();
         } elseif ($action == 'list') {
-          
+
           $this->listGroups();
         }
 
         break;
       case 'POST':
+        switch ($action = $payload['GET']['action']) {
+          case 'create':
+            $this->newGroupPermissions();
+            break;
 
-        $action = $payload['GET']['action'];
+          case 'update':
+            $this->updateGroupPermission()();
+            break;
 
-        if ($action == 'create') {
-
-          $this->newGroupPermissions();
-
-        } elseif ($action == 'update') {
-
-          $this->updateGroupPermission();
+          case 'addUserToGroup':
+            $this->addUserToGroup();
+            break;
         }
 
         break;
@@ -141,6 +143,38 @@ class GroupPermissionController extends Controller
     }
 
     $this->tokenInvalid();
+  }
+
+  public function addUserToGroup()
+  {
+
+    if ($this->http->method() != 'POST') {
+      $this->json->sendBack([
+        'success' => fasle,
+        'message' => 'Unsupported method for this api'
+      ]);
+
+      return;
+    }
+
+    if ($this->user->isTokenValid($this->http->data()['GET']['token'])) {
+
+      $this->model->load('account/group');
+
+      if ($this->model->group->addUserToGroup($this->http->data()['POST'])) {
+        $this->json->sendBack([
+          'success' => true,
+          'message' => 'Group has been added a permission'
+        ]);
+
+        return;
+      }
+
+      $this->json->sendBack([
+        'success' => Fasle,
+        'message' => 'Error: Please check if Group Exists or UserId Exists'
+      ]);
+    }
   }
 
   public function deleteGroupPermission()
