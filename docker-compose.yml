@@ -9,7 +9,7 @@ services:
     volumes: 
       - ./:/var/www/html
     ports: 
-      - 81:80
+      - 81:81
     depends_on:
       - 'db'  
     environment:
@@ -26,7 +26,7 @@ services:
 
   adminer:
     container_name: adminer
-    image: adminer
+    image: adminer:latest
     restart: always
     ports:
       - 8080:8080
