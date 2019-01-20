@@ -9,7 +9,7 @@ services:
     volumes: 
       - ./:/var/www/html
     ports: 
-      - 81:81
+      - 81:80
     depends_on:
       - 'db'  
     environment:
