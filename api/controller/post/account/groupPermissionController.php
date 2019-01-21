@@ -17,20 +17,23 @@ class GroupPermissionController extends Controller
     $payload = $this->http->data();
 
     switch ($this->http->method()) {
+
       case 'GET':
+        #region 
         $action = $this->http->data()['GET']['action'];
-
-        if ($action == 'permission') {
-
-          $this->listPermissions();
-        } elseif ($action == 'list') {
-
-          $this->listGroups();
+        switch ($action) {
+          case 'permission':
+            $this->listPermissions();
+            break;
+          case 'list':
+            $this->listGroups();
+            break;
         }
-
-        break;
+        #endregion
       case 'POST':
+
         switch ($action = $payload['GET']['action']) {
+
           case 'create':
             $this->newGroupPermissions();
             break;
@@ -45,10 +48,12 @@ class GroupPermissionController extends Controller
         }
 
         break;
+
       case 'PUT':
 
         $this->methodNotSupport();
         break;
+
       case 'DELETE':
 
         $this->deleteGroupPermission();
@@ -67,11 +72,21 @@ class GroupPermissionController extends Controller
     ]);
   }
 
+  /**
+   * Query permissions based on Group ID
+   * 
+   * @param GET action 'permission'
+   * @param GET token
+   * @param GET api     post/account/group-permission/
+   * @param GET id      group id
+   */
   public function listPermissions()
   {
+    
     $this->model->load('account/group');
+    
+    #region 
     $getPaylod = $this->http->data()['GET'];
-
     if ($this->user->isTokenValid($getPaylod['token'])) {
 
       $permissions = $this->model->group->listPermissions($getPaylod['id']);
@@ -79,8 +94,10 @@ class GroupPermissionController extends Controller
         'success' => true,
         'data' => json_decode($permissions)
       ]);
+      
       return;
     }
+    #endregion
 
     $this->json->sendBack([
       'success' => false,
@@ -97,18 +114,21 @@ class GroupPermissionController extends Controller
    */
   public function newGroupPermissions()
   {
-
+    ## Check method http
     if ($this->http->method() != 'POST') {
 
       $this->tokenInvalid();
       return;
     }
 
-    if ($this->user->isTokenValid($_POST['token'])) {
-
+    if ($this->user->isTokenValid($_POST['token'])) 
+    {
+      
       $this->model->load('account/group');
-
-      if ($this->model->group->countGroup($_POST['name'])) {
+      
+      ## Check existence
+      if ($this->model->group->countGroup($_POST['name'])) 
+      {
 
         $this->json->sendBack([
           'success' => false,
@@ -118,6 +138,7 @@ class GroupPermissionController extends Controller
         return;
       }
 
+      ## Create new 
       $num_rows = $this->model->group->newGroup($_POST);
       $this->json->sendBack([
         'success' => true,
@@ -130,24 +151,12 @@ class GroupPermissionController extends Controller
     $this->tokenInvalid();
   }
 
-  public function updateGroupPermission()
-  {
-    $this->json->sendBack([
-      'method' => 'Update'
-    ]);
-
-    ## check method
-    if ($this->user->isTokenValid($_PUT['token'])) {
-
-      return;
-    }
-
-    $this->tokenInvalid();
-  }
-
+  /**
+   * Add user to a permission group
+   */
   public function addUserToGroup()
   {
-
+    ## Check method http
     if ($this->http->method() != 'POST') {
       $this->json->sendBack([
         'success' => fasle,
@@ -157,10 +166,11 @@ class GroupPermissionController extends Controller
       return;
     }
 
+    ## if token is valid, process
     if ($this->user->isTokenValid($this->http->data()['GET']['token'])) {
 
       $this->model->load('account/group');
-
+    
       if ($this->model->group->addUserToGroup($this->http->data()['POST'])) {
         $this->json->sendBack([
           'success' => true,
@@ -170,6 +180,7 @@ class GroupPermissionController extends Controller
         return;
       }
 
+      ## else return errors
       $this->json->sendBack([
         'success' => Fasle,
         'message' => 'Error: Please check if Group Exists or UserId Exists'
