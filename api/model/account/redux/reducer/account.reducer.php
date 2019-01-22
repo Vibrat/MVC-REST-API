@@ -74,7 +74,7 @@ class AccountReducer extends BaseModel
 
                 $this->payload = array_merge($this->payload, [
                     'action'     => 'ACCOUNT_GROUP_CREATE',
-                    'payload'    => $data   
+                    'payload'    => $data->rowsCount()   
                 ]);
                 break;
 

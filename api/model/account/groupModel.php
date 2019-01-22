@@ -9,6 +9,15 @@ use Reducer\AccountReducer;
 class GroupModel extends AccountReducer
 {
 
+    /**
+     * Create new group in users_group
+     * 
+     * @param Array $data [
+     *      'name' => 'VIP123213', 
+     *      'permission' => {"api": ["post/account/group-permission/"]}
+     * ]
+     * @return Array $payload
+     */
     public function newGroup(array $data)
     {
         return $this->reduce([
