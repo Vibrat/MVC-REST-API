@@ -68,7 +68,7 @@ class GroupPermissionController extends Controller
   {
     $this->json->sendBack([
       'success' => false,
-      'message' => 'Please check your token'
+      'message' => 'Please check your token for api listGroups'
     ]);
   }
 
