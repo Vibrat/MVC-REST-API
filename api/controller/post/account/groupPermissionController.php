@@ -173,7 +173,6 @@ class GroupPermissionController extends Controller
       }
 
       ## Create new 
-      var_dump($_POST['permission']);
       $num_rows = $this->model->group->newGroup($_POST);
       $this->json->sendBack([
         'success' => true,
