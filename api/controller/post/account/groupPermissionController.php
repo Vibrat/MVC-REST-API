@@ -173,6 +173,7 @@ class GroupPermissionController extends Controller
       }
 
       ## Create new 
+      var_dump($_POST['permission']);
       $num_rows = $this->model->group->newGroup($_POST);
       $this->json->sendBack([
         'success' => true,
@@ -193,7 +194,7 @@ class GroupPermissionController extends Controller
     ## Check method http
     if ($this->http->method() != 'POST') {
       $this->json->sendBack([
-        'success' => fasle,
+        'success' => false,
         'message' => 'Unsupported method for this api'
       ]);
 
@@ -216,10 +217,16 @@ class GroupPermissionController extends Controller
 
       ## else return errors
       $this->json->sendBack([
-        'success' => Fasle,
+        'success' => false,
         'message' => 'Error: Please check if Group Exists or UserId Exists'
       ]);
+      return;
     }
+
+    $this->json->sendBack([
+      'success' => false,
+      'message' => 'Invalid token'
+    ]);
   }
 
   public function deleteGroupPermission()

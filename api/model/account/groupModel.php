@@ -11,16 +11,29 @@ class GroupModel extends AccountReducer
 
     public function newGroup(array $data)
     {
-
-        $sql = "INSERT INTO `" . DB_PREFIX . "users_group` SET name = '" . $data['name'] . "', permission = '" . $data['permission'] . "'";
-        return $this->db->query($sql)->rowsCount();
+        return $this->reduce([
+            'action'    => ACCOUNT_GROUP_CREATE,
+            'payload'   => [
+                'name'          => $data['name'],
+                'permission'    => $data['permission']
+            ]
+        ]);
     }
 
+    /**
+     * Count number of groups by name
+     * 
+     * @param String $group_name
+     */
     public function countGroup(String $group_name)
     {
 
-        $sql = "SELECT COUNT(*) as total FROM `" . DB_PREFIX . "users_group` WHERE name = '" . $group_name . "'";
-        return $this->db->query($sql)->row('total');
+        return $this->reduce([
+            'action'    => ACCOUNT_GROUP_NUM_BY_NAME,
+            'payload'   => [
+                    'name'  => $group_name
+                ]
+        ])['payload'];
     }
 
     /**
@@ -30,32 +43,52 @@ class GroupModel extends AccountReducer
      */
     public function listPermissions($id)
     {
-        $query = $this->db->query("SELECT permission FROM `" . DB_PREFIX . "users_group` WHERE id  = '" . (int)$id . "'");
+        $response = $this->reduce([
+            'action'    => ACCOUNT_PERMISSION_LIST,
+            'payload'   => [
+                'id'    =>  $id
+            ]
+        ]);
 
-        return $query->row('permission');
+        return $response['payload']['permission'];
     }
 
-    public function addUserToGroup($payload)
+    /**
+     * Add a record to table users_permission
+     * 
+     * @param Array $data ['userId' => 1, 'groupId' => 2]
+     * @return Number
+     */
+    public function addUserToGroup($data)
     {
 
-        $sql_num_groups = "SELECT COUNT(*) as total  FROM `" . DB_PREFIX . "users_group` WHERE id = '" . $payload['groupId'] . "'";
-        $sql_num_permissions = "SELECT COUNT(*) as total FROM `" . DB_PREFIX . "users_permission` WHERE user_id = '" . $payload['userId'] . "' AND group_permission_id = '" . $payload['groupId'] . "'";
-        $sql_insert_permissions = "INSERT INTO `" . DB_PREFIX . "users_permission` SET user_id = '" . $payload['userId'] . "', group_permission_id = '" . $payload['groupId'] . "'";
+        if ($this->reduce([
+            'action'    => ACCOUNT_GROUP_NUM,
+            'payload'   => [
+                'id'    => $data['groupId']
+            ]   
+        ])['payload']) 
+        {
+            if (!$this->reduce([
+                'action'    => ACCOUNT_PERMISSION_NUM,
+                'payload'   =>  [
+                    'userId'    => $data['userId'],
+                    'groupId'   => $data['groupId']
+                ]
+            ])['payload']) {
+                $records = $this->reduce([
+                    'action'    => ACCOUNT_PERMISSION_ADD,
+                    'payload'   => [
+                        'userId'    => $data['userId'],
+                        'groupId'   => $data['groupId']
+                    ]
+                ]);
 
-        if ($this->db->query($sql_num_groups)->row('total')) {
-
-            if (!$this->db->query($sql_num_permissions)->row('total')) {
-
-                $query_add = $this->db->query($sql_insert_permissions);
-
-                if ($query_add->rowsCount()) {
-                    return true;
-                }
+                return $records;
             }
-
-            return false;
         }
 
+        return;
     }
 
     /**
