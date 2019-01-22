@@ -7,7 +7,7 @@ services:
     restart: always
     command: apachectl -D FOREGROUND   
     volumes: 
-      - $(VL_CODEBASE):/var/www/html
+      - $$(VL_CODEBASE):/var/www/html
     ports: 
       - 81:80
     depends_on:
