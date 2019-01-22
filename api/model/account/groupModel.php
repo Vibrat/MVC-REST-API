@@ -1,10 +1,12 @@
 <?php
+require 'redux/redux.php';
+
+use Reducer\AccountReducer;
 
 /**
- * Class Model for Group Permission
+ * Model for Group Permissions
  */
-
-class GroupModel extends BaseModel
+class GroupModel extends AccountReducer
 {
 
     public function newGroup(array $data)
@@ -54,5 +56,24 @@ class GroupModel extends BaseModel
             return false;
         }
 
+    }
+
+    /**
+     * Query list of groups from database
+     * 
+     * @param  String $id 
+     * @return Array 
+     */
+    public function listGroups($id)
+    {
+
+        $payload = $this->reduce([
+            'action'    => ACCOUNT_GROUP_LIST,
+            'payload'   => [
+                'id' => $id
+            ]
+        ]);
+
+        return $payload;
     }
 }

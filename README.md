@@ -12,3 +12,4 @@ All test-cases will be stored in `tests/`. This uses `PHPUnit`, in order to run 
 # Todo:
 
     + Revise Group Permission API - Add Group Permissions
+    + Adding Redux model for database accessing.

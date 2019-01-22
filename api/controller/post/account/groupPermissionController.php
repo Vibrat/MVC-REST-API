@@ -1,16 +1,23 @@
 <?php
+use System\Model\Controller;
+use TheSeer\Tokenizer\Exception;
 
 /**
  * Group Permissions
  * 
- * @method newGroupPermissions api=post/account/group-permission/new-group
+ * @param GET  api = newGroupPermissions api=post/account/group-permission
+ * @param GET  action
+ * @param GET  token 
  */
-
-use System\Model\Controller;
-
 class GroupPermissionController extends Controller
 {
 
+  /**
+   * Logic hanlder
+   * 
+   * @param METHOD  'GET' | 'POST' | 'PUT' | 'DELETE'
+   * @param String  $action 'permission' | list | create | update  | addUserToGroup
+   */
   public function index()
   {
 
@@ -19,6 +26,7 @@ class GroupPermissionController extends Controller
     switch ($this->http->method()) {
 
       case 'GET':
+
         #region 
         $action = $this->http->data()['GET']['action'];
         switch ($action) {
@@ -30,18 +38,16 @@ class GroupPermissionController extends Controller
             break;
         }
         #endregion
+
       case 'POST':
 
         switch ($action = $payload['GET']['action']) {
-
           case 'create':
             $this->newGroupPermissions();
             break;
-
           case 'update':
-            $this->updateGroupPermission()();
+            $this->updateGroupPermission();
             break;
-
           case 'addUserToGroup':
             $this->addUserToGroup();
             break;
@@ -58,17 +64,47 @@ class GroupPermissionController extends Controller
 
         $this->deleteGroupPermission();
         break;
+
       default:
 
         $this->methodNotSupport();
     }
   }
 
+  /**
+   * list groups of permissions associate to a user
+   * 
+   * @param GET   action 'list'
+   * @param GET   id  
+   */
   public function listGroups()
   {
+    $this->model->load('account/group');
+
+    try {
+      $data = $this->http->data()['GET'];
+
+      #region
+      if ($this->user->isTokenValid($data['token'])) 
+      {
+        $list_groups = $this->model->group->listGroups($data['id']); 
+
+        return $this->json->sendBack([
+          'success' => True,
+          'data'    => $list_groups
+        ]);
+      }
+  
+    } catch(Exception $e) {
+      $this->json->sendBack([
+        'success' => false,
+        'message' => 'There unexpected error happened, please contact administrator'
+      ]);
+    }
+   
     $this->json->sendBack([
       'success' => false,
-      'message' => 'Please check your token for api listGroups'
+      'message' => 'Please check your token permissions'
     ]);
   }
 
@@ -82,7 +118,7 @@ class GroupPermissionController extends Controller
    */
   public function listPermissions()
   {
-    
+
     $this->model->load('account/group');
     
     #region 
@@ -94,14 +130,14 @@ class GroupPermissionController extends Controller
         'success' => true,
         'data' => json_decode($permissions)
       ]);
-      
+
       return;
     }
     #endregion
 
     $this->json->sendBack([
       'success' => false,
-      'message' => 'Please check your token'
+      'message' => 'Please check your token validation & permissions'
     ]);
   }
 
@@ -121,14 +157,12 @@ class GroupPermissionController extends Controller
       return;
     }
 
-    if ($this->user->isTokenValid($_POST['token'])) 
-    {
-      
+    if ($this->user->isTokenValid($_POST['token'])) {
+
       $this->model->load('account/group');
       
       ## Check existence
-      if ($this->model->group->countGroup($_POST['name'])) 
-      {
+      if ($this->model->group->countGroup($_POST['name'])) {
 
         $this->json->sendBack([
           'success' => false,
@@ -170,7 +204,7 @@ class GroupPermissionController extends Controller
     if ($this->user->isTokenValid($this->http->data()['GET']['token'])) {
 
       $this->model->load('account/group');
-    
+
       if ($this->model->group->addUserToGroup($this->http->data()['POST'])) {
         $this->json->sendBack([
           'success' => true,
