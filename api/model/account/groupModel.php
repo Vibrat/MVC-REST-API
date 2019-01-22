@@ -66,7 +66,7 @@ class GroupModel extends AccountReducer
      */
     public function listGroups($id)
     {
-
+        $this->add_service('AccountService');
         $payload = $this->reduce([
             'action'    => ACCOUNT_GROUP_LIST,
             'payload'   => [
