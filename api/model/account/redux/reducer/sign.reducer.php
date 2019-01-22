@@ -36,6 +36,14 @@ class SignReducer extends BaseModel {
                 ]);
 
                 break;
+            case SIGN_DELETE_ACCOUNT:
+                $data = $this->db->query(sprintf(SIGN_DELETE_ACCOUNT, DB_PREFIX, $snapshot['payload']['username']));
+                
+                $this->payload = array_merge([
+                    'action'    =>  'SIGN_DELETE_ACCOUNT',
+                    'payload'   => $data->rowsCount()
+                ]);
+                break;
         }
 
         return $this->payload;

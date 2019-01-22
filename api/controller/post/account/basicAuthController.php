@@ -88,6 +88,47 @@ class BasicAuthController extends Controller
     }
 
     /**
+     * Delete an account database users
+     * 
+     * @param GET username
+     */
+    public function delete()
+    {
+        $data = $this->http->data()['GET'];
+        if ($this->http->method() != 'DELETE') {
+            $this->json->sendBack([
+                'success' => false,
+                'message' => 'Method not support this api'
+            ]);
+            return;
+        }
+
+        if ($this->user->isTokenValid($data['token'])) {
+            $this->model->load('account/account');
+
+            if ($this->model->account->delete($data['username'])) {
+                $this->json->sendBack([
+                    'success' => true,
+                    'message' => ' successfully delete an account'
+                ]);
+
+                return;
+            }
+
+            $this->json->sendBack([
+                'success' => false,
+                'message' => 'User not exists in database for deletion'
+            ]);
+            return;
+        }
+
+        $this->json->sendBack([
+            'success' => false,
+            'message' => 'token is invalid'
+        ]);
+    }
+
+    /**
      *  Validate User Rule for 'username' and 'password' 
      *
      *  @param Array $data ['username' => 'lamnguyen' , 'password' => 'password']

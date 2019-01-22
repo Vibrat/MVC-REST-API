@@ -26,7 +26,6 @@ class GroupPermissionController extends Controller
     switch ($this->http->method()) {
 
       case 'GET':
-
         #region 
         $action = $this->http->data()['GET']['action'];
         switch ($action) {
@@ -40,7 +39,6 @@ class GroupPermissionController extends Controller
         #endregion
 
       case 'POST':
-
         switch ($action = $payload['GET']['action']) {
           case 'create':
             $this->newGroupPermissions();
@@ -56,17 +54,14 @@ class GroupPermissionController extends Controller
         break;
 
       case 'PUT':
-
         $this->methodNotSupport();
         break;
 
       case 'DELETE':
-
         $this->deleteGroupPermission();
         break;
 
       default:
-
         $this->methodNotSupport();
     }
   }
@@ -85,23 +80,22 @@ class GroupPermissionController extends Controller
       $data = $this->http->data()['GET'];
 
       #region
-      if ($this->user->isTokenValid($data['token'])) 
-      {
-        $list_groups = $this->model->group->listGroups($data['id']); 
+      if ($this->user->isTokenValid($data['token'])) {
+        $list_groups = $this->model->group->listGroups($data['id']);
 
         return $this->json->sendBack([
-          'success' => True,
-          'data'    => $list_groups
+          'success' => true,
+          'data' => $list_groups
         ]);
       }
-  
-    } catch(Exception $e) {
+
+    } catch (Exception $e) {
       $this->json->sendBack([
         'success' => false,
         'message' => 'There unexpected error happened, please contact administrator'
       ]);
     }
-   
+
     $this->json->sendBack([
       'success' => false,
       'message' => 'Please check your token permissions'
@@ -162,7 +156,8 @@ class GroupPermissionController extends Controller
       $this->model->load('account/group');
       
       ## Check existence
-      if ($this->model->group->countGroup($_POST['name'])) {
+      if ($this->model->group->countGroup($_POST['name'])) 
+      {
 
         $this->json->sendBack([
           'success' => false,
@@ -191,7 +186,8 @@ class GroupPermissionController extends Controller
   public function addUserToGroup()
   {
     ## Check method http
-    if ($this->http->method() != 'POST') {
+    if ($this->http->method() != 'POST') 
+    {
       $this->json->sendBack([
         'success' => false,
         'message' => 'Unsupported method for this api'
@@ -201,11 +197,14 @@ class GroupPermissionController extends Controller
     }
 
     ## if token is valid, process
-    if ($this->user->isTokenValid($this->http->data()['GET']['token'])) {
+    if ($this->user->isTokenValid($this->http->data()['GET']['token'])) 
+    {
 
       $this->model->load('account/group');
 
-      if ($this->model->group->addUserToGroup($this->http->data()['POST'])) {
+      if ($this->model->group->addUserToGroup($this->http->data()['POST'])) 
+      {
+       
         $this->json->sendBack([
           'success' => true,
           'message' => 'Group has been added a permission'
@@ -219,6 +218,7 @@ class GroupPermissionController extends Controller
         'success' => false,
         'message' => 'Error: Please check if Group Exists or UserId Exists'
       ]);
+
       return;
     }
 
@@ -231,12 +231,39 @@ class GroupPermissionController extends Controller
   public function deleteGroupPermission()
   {
 
-    echo 'Delete group permissions';
+    $data = $this->http->data()['GET'];
+
+    if ($this->http->method() != 'DELETE') 
+    {
+      $this->json->sendBack([
+          'success'   => true,
+          'message'   => 'Method not support this function'
+      ]);  
+      return;
+    }
+
+    if ($this->user->isTokenValid($data['token']))
+    {
+     
+      $this->model->load('account/account');
+      if ($this->model->account->delete($data['id']))
+      {
+        $this->json->sendBack([
+          'success' => true,
+          'message' => 'successfully delete account'
+        ]);
+        return;
+      }
+    }
+
+    $this->json->sendBack([
+      'success' => false,
+      'message' => 'token is invalid'
+    ]);
   }
 
   private function tokenInvalid()
   {
-
     $this->json->sendBack([
       'success' => false,
       'message' => 'Token is invalid or user has no permission'
@@ -245,7 +272,6 @@ class GroupPermissionController extends Controller
 
   private function methodNotSupport()
   {
-
     $this->json->sendBack([
       'success' => false,
       'message' => 'Application does not support method ' . $this->http->method()

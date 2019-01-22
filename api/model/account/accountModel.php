@@ -40,4 +40,24 @@ class AccountModel extends SignReducer {
             ]
         ])['payload'];
     }
+
+    public function delete(String $username) 
+    {
+        if ($this->reduce([
+            'action'    => SIGN_CHECK_ACCOUNT,
+            'payload'   => [
+                'username'  => $username   
+            ]
+        ]))
+        {
+            return $this->reduce([
+                'action'    => SIGN_DELETE_ACCOUNT,
+                'payload'   => [
+                    'username'    => $username
+                ]
+            ])['payload'];
+        }
+
+        return;
+    }
 }
