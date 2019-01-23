@@ -118,4 +118,21 @@ class GroupModel extends AccountReducer
 
         return $payload;
     }
+
+    /**
+     * Delete a Group in users_group
+     * 
+     * @param String $name
+     */
+    public function delete(String $name) 
+    {
+        $payload = $this->reduce([
+            'action'    => ACCOUNT_GROUP_DELETE,
+            'payload'   => [
+                'name'  => $name
+            ]
+        ]);
+
+        return $payload['payload'];
+    }
 }

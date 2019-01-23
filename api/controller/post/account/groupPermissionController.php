@@ -22,7 +22,6 @@ class GroupPermissionController extends Controller
   {
 
     $payload = $this->http->data();
-
     switch ($this->http->method()) {
 
       case 'GET':
@@ -58,6 +57,7 @@ class GroupPermissionController extends Controller
         break;
 
       case 'DELETE':
+      
         $this->deleteGroupPermission();
         break;
 
@@ -246,7 +246,7 @@ class GroupPermissionController extends Controller
     {
      
       $this->model->load('account/account');
-      if ($this->model->account->delete($data['id']))
+      if ($this->model->account->delete($data['name']))
       {
         $this->json->sendBack([
           'success' => true,

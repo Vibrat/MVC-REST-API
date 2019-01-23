@@ -68,6 +68,16 @@ class AccountReducer extends BaseModel
                     'payload'   =>  $data->row('total')
                 ]);
                 break;
+            
+            case ACCOUNT_GROUP_DELETE:
+                $data = $this->db->query(sprintf(ACCOUNT_GROUP_DELETE, DB_PREFIX, $snapshot['payload']['name']));
+
+                $this->payload = array_merge($this->payload, [
+                    'action'    => 'ACCOUNT_GROUP_DELETE',
+                    'payload'   => $data->rowsCount()
+                ]);
+                
+                break;
                 
             case ACCOUNT_GROUP_CREATE: 
                 $data = $this->db->query(sprintf(ACCOUNT_GROUP_CREATE, DB_PREFIX, $snapshot['payload']['name'], $snapshot['payload']['permission']));
