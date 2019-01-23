@@ -245,8 +245,8 @@ class GroupPermissionController extends Controller
     if ($this->user->isTokenValid($data['token']))
     {
      
-      $this->model->load('account/account');
-      if ($this->model->account->delete($data['name']))
+      $this->model->load('account/group');
+      if ($this->model->group->delete($data['name']))
       {
         $this->json->sendBack([
           'success' => true,
@@ -254,6 +254,12 @@ class GroupPermissionController extends Controller
         ]);
         return;
       }
+
+      $this->json->sendBack([
+        'success' => false,
+        'message' => 'Unknown error while delete group'
+      ]);
+      return;
     }
 
     $this->json->sendBack([
